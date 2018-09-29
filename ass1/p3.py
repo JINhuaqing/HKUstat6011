@@ -5,6 +5,7 @@ from scipy import stats
 import argparse
 from pathlib import Path
 import csv
+import pickle
 
 
 def csvread(froot):
@@ -13,50 +14,48 @@ def csvread(froot):
         rows = list(reader)
     return rows
 
-root = './ass1/files'
-root = Path(root)
-files = ['hw1q3.csv', 'hw1q4.csv', 'hw1q5.csv']
-q3index, q4index, q5index = True, True, True 
+froot = Path('./ass1/files/hw1q3.csv')
 
-if q3index:
-    # problem 3
-    f1 = root/files[0]
-    rows = csvread(f1)
-    Yv = [float(i[0]) for i in rows]
-    arrY = np.array(Yv)
+# problem 3
+rows = csvread(froot)
+Yv = [float(i[0]) for i in rows]
+arrY = np.array(Yv)
 
-    # part (c)
-    # setting
-    mu0 = 5
-    sigma0 = 10
-    xi0 = 0.01 
-    n = len(arrY)
-    size = 5000
-    datalst = []
+# part (c)
+# setting
+mu0 = 5
+sigma0 = 10
+xi0 = 0.01 
+n = len(arrY)
+size = 5000
+datalst = []
 
-    # load functions
-    taugm = stats.gamma(a=xi0, scale=1/xi0)
-    munorm = stats.norm(mu0, sigma0)    
-    u = stats.uniform(0, 1)
-    muhat = np.mean(arrY)
-    sigmahat2 = np.std(arrY)**2
-    cri = sigmahat2**(-n/2)*np.exp(-n/2)
-    def cf(mu, sigma2):
-        tmp = np.mean((arrY-arrY.mean())**2)/sigma2
-        tmp = tmp**(n/2)
-        tmp = tmp*np.exp(-np.sum((arrY-mu)**2)/(2*sigma2)+n/2)
-        return tmp
+# since we already know the conditionnal distribution, I use gibbs sampling here
+# parameters
+x0 = [mu0, 1]
+def sigmac(tau):
+    return np.sqrt(sigma0**2/(1+tau*n*(sigma0**2)))
+def muc(tau):
+    return (mu0+tau*sigma0**2*arrY.sum())/(1+tau*n*sigma0**2)
+alphac = n/2 + xi0
+def betac(mu):
+    return xi0+0.5*np.sum((arrY-mu)**2)
 
-    # start simulation
-    while len(datalst)<5000:
-        mymu = munorm.rvs(size=1)
-        mytau = taugm.rvs(size=1)
-        myuni = u.rvs(size=1)
-        #print(mymu, mytau, myuni)
-        if myuni <= cf(mymu, 1/mytau):
-            datalst.append((mymu, mytau))
-            print(f'the num of data is {len(datalst)}') 
-if q4index:
-    pass
-if q5index:
-    pass
+# start simulation
+muk, tauk = x0
+flag = 0
+while len(datalst)<size:
+    rvmuc = stats.norm(muc(tauk), sigmac(tauk))
+    muk = rvmuc.rvs()
+    rvtauc = stats.gamma(alphac, scale=1/betac(muk))
+    tauk = rvtauc.rvs()
+    flag += 1
+    if flag == 1000: 
+        print(f'flag: {flag}, we get the first data')
+        datalst.append([muk, tauk])
+    if flag > 1000 and flag % 100 == 0:
+        print(f'flag: {flag}, we get the  {(flag-1000)//100+1}th data')
+        datalst.append([muk, tauk])
+with open('./ass1/savedoc/p3c.pkl', 'wb') as f:
+    pickle.dump(datalst, f)
+    
