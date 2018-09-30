@@ -8,6 +8,10 @@ import csv
 import pickle
 
 
+parser = argparse.ArgumentParser(description='python code for problem 3')
+parser.add_argument('--is_f', help='whether do part f or not', action='store_true')
+args = parser.parse_args()
+
 def csvread(froot):
     with open(froot, 'r') as f:
         reader = csv.reader(f)
@@ -20,7 +24,7 @@ froot = Path('./ass1/files/hw1q3.csv')
 rows = csvread(froot)
 Yv = [float(i[0]) for i in rows]
 arrY = np.array(Yv)
-is_f = True 
+is_f = args.is_f 
 
 # part (c)
 # setting
