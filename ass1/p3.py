@@ -20,15 +20,29 @@ froot = Path('./ass1/files/hw1q3.csv')
 rows = csvread(froot)
 Yv = [float(i[0]) for i in rows]
 arrY = np.array(Yv)
+is_f = True 
 
 # part (c)
 # setting
-mu0 = 5
-sigma0 = 10
-xi0 = 0.01 
+if not is_f: 
+    mu0 = 5
+    sigma0 = 10
+    name1 = 'd'
+    name2 = 'e'
+    xi0 = 0.01 
+else:
+    mu0 = 5
+    sigma0 = 0.1 
+    xi0 = 0.01 
+    name1 = 'f1'
+    name2 = 'f2'
+
 n = len(arrY)
-size = 5000
+initnum = 2000
+step = 20
+size = 50000
 datalst = []
+ynewlst = []
 
 # since we already know the conditionnal distribution, I use gibbs sampling here
 # parameters
@@ -50,12 +64,20 @@ while len(datalst)<size:
     rvtauc = stats.gamma(alphac, scale=1/betac(muk))
     tauk = rvtauc.rvs()
     flag += 1
-    if flag == 1000: 
+    if flag == initnum: 
         print(f'flag: {flag}, we get the first data')
         datalst.append([muk, tauk])
-    if flag > 1000 and flag % 100 == 0:
-        print(f'flag: {flag}, we get the  {(flag-1000)//100+1}th data')
+        rvynew = stats.norm(muk, np.sqrt(1/tauk))
+        ynewlst.append(rvynew.rvs())
+    if flag > initnum and flag % step == 0:
+        print(f'flag: {flag}, we get the  {(flag-initnum)//step+1}th data')
         datalst.append([muk, tauk])
-with open('./ass1/savedoc/p3c.pkl', 'wb') as f:
+        rvynew = stats.norm(muk, np.sqrt(1/tauk))
+        ynewlst.append(rvynew.rvs())
+
+with open(f'./ass1/savedoc/p3{name1}.pkl', 'wb') as f:
     pickle.dump(datalst, f)
+
+with open(f'./ass1/savedoc/p3{name2}.pkl', 'wb') as f:
+    pickle.dump(ynewlst, f)
     
