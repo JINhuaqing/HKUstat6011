@@ -3,6 +3,7 @@ import numpy as np
 import csv
 from scipy import stats
 import matplotlib.pyplot as plt
+import prettytable as pt
 
 plt.switch_backend('agg')
 plt.figure(figsize=(20, 10))
@@ -21,18 +22,19 @@ sigma0 = 10
 mupost = (1+sigma0**2*data.sum())/(1+n*sigma0**2)
 sigmapost = np.sqrt(sigma0**2/(1+n*sigma0**2))
 postdist = stats.norm(mupost, sigmapost)
+print(f'the sigma2 is {sigmapost**2:.4g}, and the mupost is {mupost:.4g}')
 
 # (b)
 Pop0 = postdist.cdf(-0.2)
-print(f'P(H0|y) is {Pop0}')
+print(f'P(H0|y) is {Pop0:.4g}')
 priordist = stats.norm(1, 10)
 BF10 = (postdist.sf(-0.2)/postdist.cdf(-0.2))/(priordist.sf(-0.2)/priordist.cdf(-0.2))
-print(f'BF10 is {BF10}')
+print(f'BF10 is {BF10:.4g}')
 
 # (c)
 
 pvalue = 1 - stats.norm().cdf((data.mean()+0.2)/np.sqrt(1/n))
-print(f'the p-value is {pvalue}')
+print(f'the p-value is {pvalue:.4g}')
 
 # (e)
 sigma0lst = np.array([0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10])
@@ -43,6 +45,11 @@ for sig in sigma0lst:
     pdist = stats.norm(mpost, sigpost)
     Pop0 = pdist.cdf(-0.2)
     poplst.append(Pop0)
+outsigmastr = 'sigma0' + ' {:9}'*len(sigma0lst)
+outpopstr = 'Pop   ' + ' {:9.4g}'*len(poplst)
+print(outsigmastr.format(*sigma0lst))
+print(outpopstr.format(*poplst))
+raise SystemExit
 
 poparr = np.array(poplst)
 logsigs = np.log(sigma0lst)

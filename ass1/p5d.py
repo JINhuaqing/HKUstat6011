@@ -61,10 +61,10 @@ while len(datalst)<size:
     tauk = s2rv.rvs()
     flag += 1
     if flag == initnum: 
-        print(f'flag: {flag}, we get the first data')
+        print(f'flag: {flag:>10}, we get the first data')
         datalst.append((beta1k, beta1k, beta2k, beta3k, tauk))
     if flag > initnum and flag % step == 0:
-        print(f'flag: {flag}, we get the  {(flag-initnum)//step+1}th data')
+        print(f'flag: {flag:>10}, we get the  {(flag-initnum)//step+1:>7}th data')
         datalst.append((beta0k, beta1k, beta2k, beta3k, tauk))
 
 with open('./ass1/savedoc/p5d.pkl', 'wb') as f:
