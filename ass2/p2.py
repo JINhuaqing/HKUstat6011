@@ -40,8 +40,8 @@ gs = t2.rvs(allnum)
 us = u01.rvs(allnum)
 probs = f(gs)/C/g(gs)
 restsamples = gs[us<=probs]
-print(f'theoretical rejection rate is {1-therate:>10.3f}')
-print(f' experiment rejection rate is {1-len(restsamples)/allnum:>10.3f}')
+print(f'theoretical rejection rate is {1-therate:>10.6f}')
+print(f' experiment rejection rate is {1-len(restsamples)/allnum:>10.6f}')
 
 
 # part (d)
@@ -60,4 +60,4 @@ plt.savefig(root/'p2d.jpg')
 
 # part (e)
 rg = 10
-norm = stats.
+#norm = stats.
