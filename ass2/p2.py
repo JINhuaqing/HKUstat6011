@@ -61,18 +61,21 @@ plt.close()
 
 # part (e)
 nume = 10000
-lowb, upb = 1e-5, 10
+lowb, upb = 1e-5, 4 
 frv = stats.chi2(1)
-x = np.linspace(lowb, 3, 1000)
-nmean, nstd = 0, 0.01
+x = np.linspace(lowb, upb, 1000)
+nmean, nstd = 0,1  
 a, b = (lowb-nmean)/nstd, (upb-nmean)/nstd
 grv = stats.truncnorm(a=a, b=b, loc=nmean, scale=nstd)
 Ce = frv.pdf(lowb)/grv.pdf(lowb)
-gsps = grv.rvs(20*nume)
-us = u01.rvs(20*nume)
+gsps = grv.rvs(200*nume)
+us = u01.rvs(200*nume)
 probs = frv.pdf(gsps)/Ce/grv.pdf(gsps)
 fsps = gsps[us<=probs] 
 plt.figure(figsize=(20, 10))
-plt.hist(fsps, bins=50, density=True)
-plt.plot(x, frv.pdf(x))
+plt.ylim([0, 10])
+plt.hist(fsps, bins=300, density=True, label='samples')
+plt.plot(x, frv.pdf(x), '--', label='$\chi^2_1$')
+plt.plot(x, grv.pdf(x), '-', label='envelop')
+plt.legend()
 plt.savefig(root/'p2e.jpg')
