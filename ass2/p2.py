@@ -57,7 +57,22 @@ plt.plot(x, laplace.pdf(x), 'r', label='laplace distribution')
 plt.plot(x, t2.pdf(x), 'g', label='t2 distribution')
 plt.legend()
 plt.savefig(root/'p2d.jpg')
+plt.close()
 
 # part (e)
-rg = 10
-#norm = stats.
+nume = 10000
+lowb, upb = 1e-5, 10
+frv = stats.chi2(1)
+x = np.linspace(lowb, 3, 1000)
+nmean, nstd = 0, 0.01
+a, b = (lowb-nmean)/nstd, (upb-nmean)/nstd
+grv = stats.truncnorm(a=a, b=b, loc=nmean, scale=nstd)
+Ce = frv.pdf(lowb)/grv.pdf(lowb)
+gsps = grv.rvs(20*nume)
+us = u01.rvs(20*nume)
+probs = frv.pdf(gsps)/Ce/grv.pdf(gsps)
+fsps = gsps[us<=probs] 
+plt.figure(figsize=(20, 10))
+plt.hist(fsps, bins=50, density=True)
+plt.plot(x, frv.pdf(x))
+plt.savefig(root/'p2e.jpg')
