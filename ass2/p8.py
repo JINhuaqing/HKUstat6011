@@ -18,8 +18,8 @@ dicdata = {}
 for idx in range(1, 7):
     dicdata[idx] = [float(i[0]) for i in data[1:] if int(i[1])==idx]
 dataarr = []
-for value in dicdata.values():
-    dataarr.append(value)
+for idx in range(1, 7): 
+    dataarr.append(dicdata[idx])
 dataarr = np.array(dataarr)
 n = len(data[1:])
 k = 6
@@ -49,7 +49,7 @@ def alphameani(sigma, tau, mu, idx):
     return tau**2*ssum/den
 
 numb = int(1e6)
-burnnum = 5000
+burnnum = 10000
 
 datalst = []
 muk, sigmak, tauk = 0.1, 0.1, 0.1
@@ -63,7 +63,7 @@ if not (root/'p8b.pkl').is_file():
         tauk2 = sts.invgamma(a=taushape, scale=tauscale(alphak)).rvs()
         tauk = np.sqrt(tauk2)
         for idx in range(1, k+1):
-            alphak[idx-1] = sts.norm(alphameani(sigmak, tauk, muk, idx), alphavari(sigmak, tauk)).rvs()
+            alphak[idx-1] = sts.norm(alphameani(sigmak, tauk, muk, idx), np.sqrt(alphavari(sigmak, tauk))).rvs()
         datalst.append([muk, sigmak2, tauk2, *list(alphak)]) 
         print(f'Part b, We totally need {numb} samples, and now we get {idxx}th')
     
@@ -113,7 +113,7 @@ def alphameani(sigma, tau, mu, idx):
     return tau**2*ssum/den
 
 numc = int(1e6)
-burnnum = 5000
+burnnum = 10000
 
 datalstc = []
 muk, sigmak, tauk = 0.1, 0.1, 0.1
@@ -127,7 +127,7 @@ if not (root/'p8c.pkl').is_file():
         tauk2 = sts.invgamma(a=taushape, scale=tauscale(alphak)).rvs()
         tauk = np.sqrt(tauk2)
         for idx in range(1, k+1):
-            alphak[idx-1] = sts.norm(alphameani(sigmak, tauk, muk, idx), alphavari(sigmak, tauk)).rvs()
+            alphak[idx-1] = sts.norm(alphameani(sigmak, tauk, muk, idx), np.sqrt(alphavari(sigmak, tauk))).rvs()
         datalstc.append([muk, sigmak2, tauk2, *list(alphak)]) 
         print(f'Part C, We totally need {numc} samples, and now we get {idxx}th')
     

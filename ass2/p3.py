@@ -43,6 +43,6 @@ def h2(x):
 def tmp(x):
     return (x-xmode)/(-h2(xmode))**(-0.5)
 
-avalue = np.exp(h(xmode))*(3*np.pi/-h2(xmode))**(0.5)*(sncdf(tmp(b))-sncdf(tmp(a)))
+avalue = np.exp(h(xmode))*(2*np.pi/-h2(xmode))**(0.5)*(sncdf(tmp(b))-sncdf(tmp(a)))
 print(f'the true value is {tvalue:.5f}')
 print(f'the approx value is {avalue:.5f}')
