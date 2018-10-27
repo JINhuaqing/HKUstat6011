@@ -21,10 +21,14 @@ for _ in range(numc):
     x = sts.norm(0, np.sqrt(nu)).rvs()
     datalstc.append(x)
 datalstc = np.array(datalstc)
+
+lrv = sts.laplace()
+xldsps = lrv.rvs(numc)
 plt.figure(figsize=(20, 10))
 plt.title('conditional sampling vs direct sampling')
 plt.xlim([-10, 10])
-sns.kdeplot(datalstc, color='red', label='sample from conditional distribution')
+sns.kdeplot(datalstc,  color='red', label='sample from conditional distribution')
+sns.kdeplot(xldsps, color='blue', label='sample directly from distribution')
 plt.savefig(root/'p1c.jpg')
 plt.close()
 
