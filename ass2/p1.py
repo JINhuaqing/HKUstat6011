@@ -11,7 +11,7 @@ np.random.seed(0)
 plt.switch_backend('agg')
 root = Path('./ass2/savedoc/')
 
-# part (c) I don't know how to sample directly from X
+# part (c) 
 a, b = 1, 1/2
 numc = 10000
 gcrv = sts.gamma(a=a, scale=1/b)
