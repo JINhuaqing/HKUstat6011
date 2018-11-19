@@ -34,12 +34,12 @@ class VA():
 
     def forward(self):
         for e in ems[2:]:
-            if self.ftrace[-1]*self.T['F->F'] >  self.ltrace[-1]*self.T['L->F']:
+            if self.ftrace[-1]*self.T['F->F'] >=  self.ltrace[-1]*self.T['L->F']:
                 self.fptrace.append('F')
             else:
                 self.fptrace.append('L')
 
-            if self.ftrace[-1]*self.T['F->L'] >  self.ltrace[-1]*self.T['L->L']:
+            if self.ftrace[-1]*self.T['F->L'] >=  self.ltrace[-1]*self.T['L->L']:
                 self.lptrace.append('F')
             else:
                 self.lptrace.append('L')
@@ -67,11 +67,13 @@ class VA():
         self.path = list(reversed(self.path))
 
 
-def path2plot(paths):
+def path2plot(paths, names=None):
     fig, axess = plt.subplots(nrows=len(paths), figsize=(10, 10))
     if len(paths) == 1:
         axess = [axess]
-    for path, axes in zip(paths, axess):
+    if names is None:
+        names = np.arange(len(paths))
+    for path, axes, name in zip(paths, axess, names):
         x = np.arange(len(path)) 
         y1 = np.zeros(len(path))
         patharr = np.array(path)
@@ -82,6 +84,7 @@ def path2plot(paths):
         y21[y1==1] = y21[y1==1] - 1 
         y22[y1==2] = y22[y1==2] - 1 
         #axes.axis('equal')
+        axes.set_title(f'({name})')
         axes.axis('off')
         for idx in x[:-1]:
             label = y1[idx]
@@ -107,8 +110,9 @@ paths = []
 for T in [T1, T2, T3, T4]:
     va = VA(tm=T)
     va()
+#    print(va.path)
     paths.append(va.path)
-path2plot(paths)
+path2plot(paths, ['a', 'b', 'c', 'd'])
 plt.show()
 plt.savefig(root/'p4.jpg')
     

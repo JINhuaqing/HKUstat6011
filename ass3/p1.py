@@ -22,6 +22,7 @@ def f(x):
 
 
 xx = np.linspace(-1, 5, 10000)
+plt.title('Integrand function')
 plt.plot(xx, f(xx))
 if not (root/'p1.jpg').is_file():
     plt.savefig(root/'p1.jpg')

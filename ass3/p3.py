@@ -82,6 +82,7 @@ if __name__ == '__main__':
         em()
         parass.append(em.paras)
     parass = np.array(parass)
+    parass[:,2:] = parass[:, 2:]**2
     bias = parass.mean(axis=0) - truepara 
     stds = parass.std(axis=0)
     output = '{:<8.4g} ' * 4 

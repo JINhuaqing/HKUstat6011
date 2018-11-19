@@ -97,7 +97,6 @@ class EMk():
 
             
 if __name__ == '__main__':
-    # data, tmus, tsigmas, tpis = gen_mixd(k, 1000)
     with open('./ass3/files/q2.csv') as f:
         data = f.readlines()
     data = [float(i.strip()) for i in data]
@@ -110,6 +109,7 @@ if __name__ == '__main__':
         init3 = np.ones(k)/k
         em = EMk(k=k, data=data, inits=[init1, init2, init3])
         em(1e-5)
-        print(f'k={k:>3}', f'AIC: {em.AIC():>10.3f}', f'BIC: {em.BIC():>10.3f}')
+        #print(em.musk, em.sigmask, em.pisk)
+        print(f'k={k:>3}  AIC: {em.AIC():>10.3f} BIC: {em.BIC():>10.3f}')
 
 
