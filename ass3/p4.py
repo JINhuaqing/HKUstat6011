@@ -33,7 +33,7 @@ class VA():
         self.path = []
 
     def forward(self):
-        for e in ems[2:]:
+        for e in self.ems[2:]:
             if self.ftrace[-1]*self.T['F->F'] >=  self.ltrace[-1]*self.T['L->F']:
                 self.fptrace.append('F')
             else:
